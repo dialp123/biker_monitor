@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "777184518219",
+    "project_id": "bikermonitorfirebase-853c5",
+    "storage_bucket": "bikermonitorfirebase-853c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777184518219:android:7b557d9fb1258fa6732dce",
+        "android_client_info": {
+          "package_name": "com.example.biker_monitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777184518219-lddn94f5dn276kblvkus6dhqo9nsulm3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.biker_monitor",
+            "certificate_hash": "a4660f18eb523068504d58aaddb8025dc7cc24b3"
+          }
+        },
+        {
+          "client_id": "777184518219-re1em6p7rpf4qocqdami67sl10anckl6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMazdPTKIoJbK2mqA65ocQih2y7yktW_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777184518219-re1em6p7rpf4qocqdami67sl10anckl6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
