@@ -164,7 +164,7 @@ class PaginaInicioAdmin extends StatelessWidget {
                       data['long'].toString()),
                 ),
                 ListTile(
-                  title: Text("Placa:" + data['placa']),
+                  title: Text("Placa: " + data['placa']),
                 ),
                 ListTile(
                   title: Text("Modelo:  " + data['modelo']),
