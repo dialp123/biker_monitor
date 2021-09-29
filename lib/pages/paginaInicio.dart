@@ -17,6 +17,7 @@ class InicioUser extends StatefulWidget {
 
 class _InicioUser extends State<InicioUser> {
   int _paginaActual = 2;
+
   List<Widget> _paginas = [
     PaginaForo(),
     paginaRobos(),
@@ -75,12 +76,22 @@ class _InicioUser extends State<InicioUser> {
 }
 
 // ignore: camel_case_types
-class paginaInicio extends StatelessWidget {
-  const paginaInicio({Key key}) : super(key: key);
+class paginaInicio extends StatefulWidget {
+  @override
+  _paginaInicio createState() => _paginaInicio();
+}
+
+// ignore: camel_case_types
+class _paginaInicio extends State<paginaInicio> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final mensaje = Provider.of<Mensaje>(context);
+    final user = Provider.of<UserRepository>(context);
 
     return SizedBox(
       width: double.infinity,
@@ -95,9 +106,11 @@ class paginaInicio extends StatelessWidget {
               width: double.infinity, //obtiene el ancho de la pantalla
               margin: EdgeInsets.all(10),
               child: FlutterMap(
+                mapController: mensaje.controller,
                 options: MapOptions(
-                  center: LatLng(1.801679, -77.165953),
-                  zoom: 18.0,
+                  center: LatLng(double.parse(mensaje.txtCoordenadas[0]),
+                      double.parse(mensaje.txtCoordenadas[1])),
+                  zoom: 16.0,
                 ),
                 layers: [
                   TileLayerOptions(
@@ -109,7 +122,8 @@ class paginaInicio extends StatelessWidget {
                       Marker(
                         width: 80.0,
                         height: 80.0,
-                        point: LatLng(1.801679, -77.165953),
+                        point: LatLng(double.parse(mensaje.txtCoordenadas[0]),
+                            double.parse(mensaje.txtCoordenadas[1])),
                         builder: (ctx) => Container(
                           child: Icon(Icons.location_on,
                               size: 40, color: Colors.blue),
@@ -192,6 +206,20 @@ class paginaInicio extends StatelessWidget {
                     icon: const Icon(Icons.power_settings_new),
                     onPressed: () {
                       mensaje.apagarEncender();
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Material(
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: mensaje.colorBtnAlarma,
+                  child: IconButton(
+                    icon: const Icon(Icons.motorcycle),
+                    onPressed: () {
+                      mensaje.apagarEncenderAlarma();
                     },
                   ),
                 ),

@@ -1,8 +1,10 @@
 import 'package:biker_monitor/provider/notificaciones.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:sms/sms.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:latlong/latlong.dart';
 
 // ignore: camel_case_types
 class Mensaje with ChangeNotifier {
@@ -16,19 +18,28 @@ class Mensaje with ChangeNotifier {
   String _encender = '0';
   String _reporte = '0';
   // ignore: unused_field
-  String _lat = '0';
+  String _lat = '2.4382';
   // ignore: unused_field
-  String _long = '0';
+  String _long = '-76.6131';
   // ignore: unused_field
   String _orientacion = '0';
   // ignore: unused_field
   String _vibracion = '0';
+  MapController _mapController = MapController();
+
+  get colorBtnAlarma {
+    if (_encender == '1') {
+      return Colors.blue[500];
+    } else {
+      return Colors.red[500];
+    }
+  }
 
   get colorBtnEncendido {
-    if (_encender == '0') {
-      return Colors.red[500];
-    } else if (_encender == '1') {
+    if (_encender == '2' || _encender == '1') {
       return Colors.blue[500];
+    } else {
+      return Colors.red[500];
     }
   }
 
@@ -52,31 +63,61 @@ class Mensaje with ChangeNotifier {
     return (_lat + ',' + _long).split(',');
   }
 
+  get controller {
+    return _mapController;
+  }
+
   void recibir(SmsMessage sms) {
     _msg = sms;
     List<String> txt = _msg.body.split(',');
-    _reporte = txt[2];
-    _lat = txt[3];
-    _long = txt[4];
-    _orientacion = txt[5];
-    _vibracion = txt[6];
+    if (txt[2] != '0' && txt[2] != _reporte) {
+      _reporte = txt[2];
+    }
+    if (txt[3] != '0' && txt[3] != _lat) {
+      _lat = txt[3];
+      if (_encender == '1') {
+        notificacion(3, "Alerta", "Cambio en la latitud: " + _lat);
+      }
+    }
+    if (txt[4] != '0' && txt[4] != _long) {
+      _long = txt[4];
+      if (_encender == '1') {
+        notificacion(4, "Alerta", "Cambio en la longitud: " + _long);
+      }
+    }
+    if (txt[5] != '0' && txt[5] != _orientacion) {
+      _orientacion = txt[5];
+      if (_encender == '1') {
+        notificacion(5, "Alerta", "Cambio en la orientacion: " + _orientacion);
+      }
+    }
+    if (txt[6] != '0' && txt[6] != _vibracion) {
+      _vibracion = txt[6];
+      if (_encender == '1') {
+        notificacion(6, "Alerta", "Cambio en la vibracion: " + _vibracion);
+      }
+    }
 
     if (_reporte == '1') {
-      notificacion(1, "Biker Monitor", "Reportando robo");
+      notificacion(1, "Alerta", "Reportando robo");
       _encender = '1';
       //ejecutar accion de reportar
     }
+    _mapController.move(
+        LatLng(
+            double.parse(txtCoordenadas[0]), double.parse(txtCoordenadas[1])),
+        16);
     notifyListeners();
   }
 
-  void apagarEncender() {
-    if (_reporte == '0') {
-      if (_encender == '0') {
+  void apagarEncenderAlarma() {
+    if (_reporte == '0' && _encender != '0') {
+      if (_encender == '2') {
         _encender = '1';
         notificacion(0, "Biker Monitor", "Alarma encendida");
         enviar();
       } else {
-        _encender = '0';
+        _encender = '2';
         notificacion(0, "Biker Monitor", "Alarma apagada");
         _lat = '0';
         _long = '0';
@@ -88,8 +129,32 @@ class Mensaje with ChangeNotifier {
     notifyListeners();
   }
 
-  void enviar() {
+  void apagarEncender() {
+    if (_reporte == '0') {
+      if (_encender == '0') {
+        _encender = '2';
+        notificacion(0, "Biker Monitor", "Sistema encendido");
+        enviar();
+      } else {
+        _encender = '0';
+
+        notificacion(0, "Biker Monitor", "Sistema apagado");
+        enviar();
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> enviar() async {
     //this._msg = SmsMessage('0', '0000' + _encender + _reporte);
-    //enviar mensaje
+    SmsSender sender = new SmsSender();
+    String address = "3233513405"; //"3125036530";
+    SimCardsProvider provider = new SimCardsProvider();
+    List<SimCard> card = await provider.getSimCards();
+    //print(card[1].slot);
+    sender.sendSms(
+        new SmsMessage(
+            address, '0000,' + _encender + "," + _reporte + ",0,0,0,0,"),
+        simCard: card[1]);
   }
 }
