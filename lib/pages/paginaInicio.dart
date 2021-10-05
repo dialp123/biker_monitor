@@ -232,7 +232,7 @@ class _paginaInicio extends State<paginaInicio> {
                   color: Colors.yellow[500],
                   child: MaterialButton(
                     onPressed: () {
-                      _onPressedBtn(context);
+                      _onPressedBtn(context, mensaje, user);
                     },
                     child: Text(
                       mensaje.txtBtnReporte,
@@ -252,7 +252,8 @@ class _paginaInicio extends State<paginaInicio> {
     );
   }
 
-  void _onPressedBtn(BuildContext context) {
+  void _onPressedBtn(
+      BuildContext context, Mensaje mensaje, UserRepository user) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -295,6 +296,8 @@ class _paginaInicio extends State<paginaInicio> {
                 OutlineButton(
                     onPressed: () {
                       Navigator.pop(context);
+                      user.reportar("dd-mm-aaaa", "hh:mm",
+                          mensaje.txtCoordenadas[0], mensaje.txtCoordenadas[1]);
                     },
                     child: Text("Aceptar"),
                     shape: RoundedRectangleBorder(

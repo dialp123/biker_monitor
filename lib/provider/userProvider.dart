@@ -100,6 +100,36 @@ class UserRepository with ChangeNotifier {
     }
   }
 
+  Future<void> reportar(
+    String fecha,
+    String hora,
+    String lat,
+    String long,
+    /*String marca, String modelo, String placa, String idBiker*/
+  ) async {
+    try {
+      firestore.collection('users').doc(user.uid).get().then((value) {
+        firestore.collection('reportes').doc(user.uid).set({
+          'fecha': fecha,
+          'hora': hora,
+          'lat': lat,
+          'long': long,
+          'marca': value.data()['marca'],
+          'modelo': value.data()['modelo'],
+          'placa': value.data()['placa'],
+          'idBiker': value.data()['idBiker'],
+          'usuario ': value.data()['correo'],
+          'reporte': "false"
+        });
+        notifyListeners();
+      });
+      notifyListeners();
+    } catch (e) {
+      notifyListeners();
+      this._e = e.toString();
+    }
+  }
+
   Future signOut() async {
     _auth.signOut();
     _status = Status.Unauthenticated;

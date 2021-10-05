@@ -58,6 +58,7 @@ class HomePage extends StatelessWidget {
       child: Consumer(
         // ignore: missing_return
         builder: (context, UserRepository user, _) {
+          final mensaje = Provider.of<Mensaje>(context);
           getIncomingMessage(context);
           switch (user.status) {
             case Status.Register:

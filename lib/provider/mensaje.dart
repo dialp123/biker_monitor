@@ -15,12 +15,13 @@ class Mensaje with ChangeNotifier {
   }
 
   SmsMessage _msg = SmsMessage('0', '0000,0,0,0,0,0,0');
+  Future<String> _idBiker;
   String _encender = '0';
   String _reporte = '0';
   // ignore: unused_field
-  String _lat = '2.4382';
+  String _lat = '0';
   // ignore: unused_field
-  String _long = '-76.6131';
+  String _long = '0';
   // ignore: unused_field
   String _orientacion = '0';
   // ignore: unused_field
@@ -148,7 +149,7 @@ class Mensaje with ChangeNotifier {
   Future<void> enviar() async {
     //this._msg = SmsMessage('0', '0000' + _encender + _reporte);
     SmsSender sender = new SmsSender();
-    String address = "3233513405"; //"3125036530";
+    String address = /*"3233513405"; */ "3125036530";
     SimCardsProvider provider = new SimCardsProvider();
     List<SimCard> card = await provider.getSimCards();
     //print(card[1].slot);
@@ -157,4 +158,6 @@ class Mensaje with ChangeNotifier {
             address, '0000,' + _encender + "," + _reporte + ",0,0,0,0,"),
         simCard: card[1]);
   }
+
+  Future<String> numeroDispositivo() {}
 }
