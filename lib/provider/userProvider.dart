@@ -118,7 +118,7 @@ class UserRepository with ChangeNotifier {
           'modelo': value.data()['modelo'],
           'placa': value.data()['placa'],
           'idBiker': value.data()['idBiker'],
-          'usuario ': value.data()['correo'],
+          'usuario': value.data()['correo'],
           'reporte': "false"
         });
         notifyListeners();

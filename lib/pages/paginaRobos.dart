@@ -1,3 +1,4 @@
+import 'package:biker_monitor/provider/mensaje.dart';
 import 'package:biker_monitor/provider/userProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class paginaRobos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserRepository>(context);
+    final mensaje = Provider.of<Mensaje>(context);
+    //mensaje.setControllerMap();
     return StreamBuilder(
         stream: user.firestore.collection('reportes').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -19,8 +22,10 @@ class paginaRobos extends StatelessWidget {
           List<DocumentSnapshot> docs = snapshot.data.docs;
 
           return FlutterMap(
+            //mapController: mensaje.controller,
             options: MapOptions(
-              center: LatLng(1.800679, -77.165803),
+              center: LatLng(double.parse(mensaje.txtCoordenadas[0]),
+                  double.parse(mensaje.txtCoordenadas[1])),
               zoom: 18.0,
             ),
             layers: [
@@ -42,6 +47,7 @@ class paginaRobos extends StatelessWidget {
   List<Marker> _buildMarkersOnMap(
       BuildContext context, List<DocumentSnapshot> docs) {
     List<Marker> markers = List<Marker>();
+    final mensaje = Provider.of<Mensaje>(context);
 
     for (var item in docs) {
       Map<String, dynamic> data = item.data();
@@ -49,7 +55,8 @@ class paginaRobos extends StatelessWidget {
       Marker marker = Marker(
         width: 80.0,
         height: 80.0,
-        point: LatLng(data['lat'], data['long']),
+        point: LatLng(double.parse(data['lat'].toString()),
+            double.parse(data['long'].toString())),
         builder: (ctx) => Container(
           child: IconButton(
             icon: Icon(
@@ -68,7 +75,8 @@ class paginaRobos extends StatelessWidget {
     Marker markerLocation = Marker(
       width: 80.0,
       height: 80.0,
-      point: LatLng(1.801199, -77.166623),
+      point: LatLng(double.parse(mensaje.txtCoordenadas[0]),
+          double.parse(mensaje.txtCoordenadas[1])),
       builder: (ctx) => Container(
         child: IconButton(
           icon: Icon(

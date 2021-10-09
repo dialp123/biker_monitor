@@ -19,14 +19,14 @@ class Mensaje with ChangeNotifier {
   String _encender = '0';
   String _reporte = '0';
   // ignore: unused_field
-  String _lat = '0';
+  String _lat = '2.438286992340584';
   // ignore: unused_field
-  String _long = '0';
+  String _long = '-76.61937957596261';
   // ignore: unused_field
   String _orientacion = '0';
   // ignore: unused_field
   String _vibracion = '0';
-  MapController _mapController = MapController();
+  MapController _mapController;
 
   get colorBtnAlarma {
     if (_encender == '1') {
@@ -68,6 +68,20 @@ class Mensaje with ChangeNotifier {
     return _mapController;
   }
 
+  get reporte {
+    return _reporte;
+  }
+
+  void setControllerMap() {
+    _mapController = MapController();
+    notifyListeners();
+  }
+
+  void setReporte() {
+    _reporte = "1";
+    notifyListeners();
+  }
+
   void recibir(SmsMessage sms) {
     _msg = sms;
     List<String> txt = _msg.body.split(',');
@@ -104,10 +118,11 @@ class Mensaje with ChangeNotifier {
       _encender = '1';
       //ejecutar accion de reportar
     }
+    notifyListeners();
     _mapController.move(
         LatLng(
             double.parse(txtCoordenadas[0]), double.parse(txtCoordenadas[1])),
-        16);
+        16.5);
     notifyListeners();
   }
 
@@ -149,7 +164,7 @@ class Mensaje with ChangeNotifier {
   Future<void> enviar() async {
     //this._msg = SmsMessage('0', '0000' + _encender + _reporte);
     SmsSender sender = new SmsSender();
-    String address = /*"3233513405"; */ "3125036530";
+    String address = /*"3233513405";*/ /*"3125036530" */ "3146453556";
     SimCardsProvider provider = new SimCardsProvider();
     List<SimCard> card = await provider.getSimCards();
     //print(card[1].slot);
@@ -158,6 +173,4 @@ class Mensaje with ChangeNotifier {
             address, '0000,' + _encender + "," + _reporte + ",0,0,0,0,"),
         simCard: card[1]);
   }
-
-  Future<String> numeroDispositivo() {}
 }

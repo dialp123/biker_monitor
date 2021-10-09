@@ -92,7 +92,7 @@ class _paginaInicio extends State<paginaInicio> {
   Widget build(BuildContext context) {
     final mensaje = Provider.of<Mensaje>(context);
     final user = Provider.of<UserRepository>(context);
-
+    mensaje.setControllerMap();
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -102,7 +102,7 @@ class _paginaInicio extends State<paginaInicio> {
           Card(
             child: Container(
               color: Colors.orange,
-              height: 250,
+              height: 230,
               width: double.infinity, //obtiene el ancho de la pantalla
               margin: EdgeInsets.all(10),
               child: FlutterMap(
@@ -110,7 +110,7 @@ class _paginaInicio extends State<paginaInicio> {
                 options: MapOptions(
                   center: LatLng(double.parse(mensaje.txtCoordenadas[0]),
                       double.parse(mensaje.txtCoordenadas[1])),
-                  zoom: 16.0,
+                  zoom: 16.5,
                 ),
                 layers: [
                   TileLayerOptions(
@@ -138,20 +138,45 @@ class _paginaInicio extends State<paginaInicio> {
           Card(
             child: Container(
               color: Colors.grey[200],
-              height: 30,
+              height: 60,
               margin: EdgeInsets.all(5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  new Text("   Coordenadas GPS:",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  new Text(mensaje.txtCoordenadas[0] +
-                      ', ' +
-                      mensaje.txtCoordenadas[1] +
-                      '    '),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "   Coordenadas GPS:",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '    Lat:      ' + mensaje.txtCoordenadas[0],
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '    Long:   ' + mensaje.txtCoordenadas[1],
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -192,7 +217,7 @@ class _paginaInicio extends State<paginaInicio> {
               ),
             ),
           ),
-          SizedBox(height: 25),
+          SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -232,7 +257,9 @@ class _paginaInicio extends State<paginaInicio> {
                   color: Colors.yellow[500],
                   child: MaterialButton(
                     onPressed: () {
-                      _onPressedBtn(context, mensaje, user);
+                      if (mensaje.reporte == "0") {
+                        _onPressedBtn(context, mensaje, user);
+                      }
                     },
                     child: Text(
                       mensaje.txtBtnReporte,
@@ -296,6 +323,7 @@ class _paginaInicio extends State<paginaInicio> {
                 OutlineButton(
                     onPressed: () {
                       Navigator.pop(context);
+                      mensaje.setReporte();
                       user.reportar("dd-mm-aaaa", "hh:mm",
                           mensaje.txtCoordenadas[0], mensaje.txtCoordenadas[1]);
                     },

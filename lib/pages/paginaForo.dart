@@ -31,7 +31,7 @@ class _PaginaForo extends State<PaginaForo> {
         children: [
           Container(
             height: 450,
-            color: Colors.red,
+            color: Colors.grey[350],
             child: StreamBuilder(
                 stream: user.firestore.collection('foro').snapshots(),
                 builder: (BuildContext context,
